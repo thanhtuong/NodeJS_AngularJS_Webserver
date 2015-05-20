@@ -1,5 +1,4 @@
 // server.js
-
 var express = require('express'); // using express framework
 var app = express();
 var mongoose = require('mongoose'); // using mongoDB
@@ -88,9 +87,9 @@ console.log('App listening on port 8888');
         });
     });
 
-    app.put('/api/todos/:todo_id',function(req,res){
+    app.put('/api/todos/:_id',function(req,res){
         Todo.update({
-            _id: req.params.todo_id
+            _id: req.params._id
         },{
             $set: {
                 text:req.body.text,
@@ -105,7 +104,7 @@ console.log('App listening on port 8888');
                     res.send(err)
                 res.json(todos);
             });
-        };
+        });
     });
 
 

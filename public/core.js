@@ -23,9 +23,22 @@ todoApp.factory('storeDataService',function(){
 	}
 	return formData;
 });
-todoApp.controller('mainController', function($scope,$http,storeDataService){
-	$scope.formData = {};
-	$scope.addButon = "Add";
+todoApp.factory('changeButtonLabel',function(){
+	var addButon = {
+		text: 'Add'
+	}
+	return addButon;
+});
+todoApp.factory('isUpdateFlag',function(){
+	var isEdit = {
+		value: false
+	}
+	return isEdit;
+});
+todoApp.controller('mainController', function($scope, $http, storeDataService, changeButtonLabel,isUpdateFlag){
+	$scope.formData = storeDataService.formData;
+	$scope.addButon = changeButtonLabel.addButon;
+	$scope.isEdit = isUpdateFlag.isEdit;
 
 	$http.get('/api/todos')
 		.success(function(data){
@@ -67,7 +80,7 @@ todoApp.controller('mainController', function($scope,$http,storeDataService){
 	$scope.updateTodo = function(id){
 		$http.put('/api/todos/'+id)
 			.success(function(data){
-				$scope.todo = data;
+				$scope.todos = data;
 				console.log(data);
 			})
 			.error(function(data){
@@ -76,24 +89,29 @@ todoApp.controller('mainController', function($scope,$http,storeDataService){
 	};
 
 	$scope.createOrUpdate = function(){
-		if($scope.isEdit){
-			$scope.updateTodo($scope.formData._id);
+		if($scope.isEdit.value){
+			$scope.updateTodo(storeDataService.formData._id);
 		}else {
 			$scope.createTodo();
 		}
 	};
 
 	$scope.edit = function(todo){
-		$scope.isEdit = true;
 		$scope.formData = {
 			_id: todo._id,
 			text: todo.text,
 			assigned_by: todo.assigned_by,
 			priority: todo.priority
 		};
+		$scope.addButon ={
+			text: 'update'
+		};
+		$scope.isEdit = {
+			value: true
+		};
+		isUpdateFlag.isEdit = $scope.isEdit;
 		storeDataService.formData = $scope.formData;
-		$scope.addButon = "Update";
-
+		changeButtonLabel.addButon = $scope.addButon;
 		console.log($scope.formData);
 	};
 });
