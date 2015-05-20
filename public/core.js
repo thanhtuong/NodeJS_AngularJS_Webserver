@@ -16,6 +16,7 @@ todoApp.config(function($stateProvider,$urlRouterProvider){
 });
 todoApp.factory('storeDataService',function(){
 	var formData = {
+		_id: '',
 		text: '',
 		assigned_by: '',
 		priority: ''
@@ -75,17 +76,22 @@ todoApp.controller('mainController', function($scope,$http,storeDataService){
 	};
 
 	$scope.createOrUpdate = function(){
-
+		if($scope.isEdit){
+			$scope.updateTodo($scope.formData._id);
+		}else {
+			$scope.createTodo();
+		}
 	};
 
 	$scope.edit = function(todo){
+		$scope.isEdit = true;
 		$scope.formData = {
 			_id: todo._id,
 			text: todo.text,
 			assigned_by: todo.assigned_by,
 			priority: todo.priority
 		};
-
+		storeDataService.formData = $scope.formData;
 		$scope.addButon = "Update";
 
 		console.log($scope.formData);
