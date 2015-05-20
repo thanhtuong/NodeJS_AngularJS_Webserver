@@ -1,0 +1,38 @@
+<div class="jumbotron text-center"> 
+            <h1>Number of Todo <span class="label label-info">{{ todos.length }}</span></h1>
+        </div> 
+
+<div id="todo-list" class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                   <th></th>    
+                                    <th>Name</th>
+                                    <th>Assigned By</th>
+                                    <th>Priority</th> 
+                                </tr>
+                             </thead>
+                            <tr ng-repeat="todo in todos">
+                                <td>
+                                   <input type="checkbox" ng-click="deleteTodo(todo._id)">     
+                                </td>
+                                <td>
+                                    {{todo.text}}
+                                </td>
+                                 <td>
+                                    {{todo.assigned_by}}
+                                </td>
+                                 <td>
+                                    {{todo.priority}}
+                                </td>
+                                <td>
+                                    <a ui-sref="home" ng-click="edit(todo)" class="btn btn-primary btn-sm">Edit</a>
+                                </td>            
+                            </tr>
+                        </table>
+                    </div>
+            </div>
+
+</div>

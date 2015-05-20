@@ -1,0 +1,22 @@
+  <!-- FORM TO CREATE TODOS -->
+  <div class="text-center">
+    <h1>Add your todo!</h1>
+  </div>
+        <div id="todo-form" class="row">
+            <div class="col-sm-8 col-sm-offset-2 text-center">
+                <form>
+                    <div class="form-group">
+
+                        <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+                        
+                        <input type="text" class="form-control input-lg text-center" placeholder="add todo name" ng-model="formData.text">
+                        <input type="text" class="form-control input-lg text-center" placeholder="add assigned by " ng-model="formData.assigned_by">
+                        <input type="text" class="form-control input-lg text-center" placeholder="add priority(Hight, Medium)" ng-model="formData.priority">
+                    </div>
+
+                    <!-- createToDo() WILL CREATE NEW TODOS -->
+                    <button type="submit" class="btn btn-primary btn-lg" ng-click="createTodo()">{{addButon}}</button>
+                </form>
+            </div>
+        </div>
+    <hr>
