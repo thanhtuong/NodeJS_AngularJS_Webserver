@@ -34,6 +34,29 @@ todoApp.config(function($stateProvider,$urlRouterProvider){
 					return TodoService.isEdit;
 				}
 			}
+		})
+		
+		// just for demo multiple view in one page
+		.state('about',{
+			url:'/about',
+			views:{
+				'': { templateUrl: 'About.html'},
+				'columnOne@about': {template:'Look i am a colum'},
+				'columnTwo@about':{template:'I am a colum two'}
+			}
+		})
+		//demo. Single view one time.
+		.state('home.list',{
+			url:'/list',
+			templateUrl: 'createTodo-list.html',
+			controller: function($scope){
+				$scope.dogs=['Bernese','Hosky','Goldendoodle'];
+			}
+		})
+
+		.state('home.paragraph',{
+			url:'/paragraph',
+			template:'Provide later'
 		});
 });
 todoApp.service('TodoService',function(){
@@ -88,7 +111,7 @@ todoApp.controller('listTodoController',function($scope,$http,TodoService){
 		$scope.isEdit = {
 			value: true
 		};
-		TodoService.isEdit = $scope.isEdit;
+		TodoService.isEdit = $scope.isEdit; 
 		TodoService.formData = $scope.formData;
 		TodoService.addButonLabel = $scope.addButon;
 		console.log($scope.formData);
@@ -104,7 +127,7 @@ todoApp.controller('mainController', function($scope, $http, TodoService){
 	$scope.createTodo = function(){
 		$http.post('/api/todos',$scope.formData)
 			.success(function(data){
-				$scope.formData = {};
+				TodoService.formData = {};
 				$scope.todos = data;
 				console.log(data);
 			})
@@ -131,6 +154,12 @@ todoApp.controller('mainController', function($scope, $http, TodoService){
 			$scope.updateTodo($scope.formData);
 			console.log($scope.formData._id);
 			TodoService.formData={};
+			TodoService.addButonLabel ={
+				text: 'Add'
+			};
+			TodoService.isEdit={
+				value:false
+			};
 		}else {
 			$scope.createTodo();
 		}

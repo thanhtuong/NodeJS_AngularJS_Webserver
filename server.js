@@ -19,16 +19,22 @@ mongoose.connect(database.url); // connect mongoDB
     app.use(methodOverride());
 // });
 
-// model 
-var Todo = mongoose.model('Todo',{
-	text : String,
+// schema
+var todoSchema =mongoose.Schema({
+    text : String,
     assigned_by: String,
     priority: String,
-	done : false
+    done : false
 });
+
+// // model 
+var Todo = mongoose.model('Todo',todoSchema);
+// require('./app/models/todo.js');
 // require('./app/models/todo.js');
 // require('./app/routes.js')(app);
+// console.log('App is: '+app);
 app.listen(8888);
+// require('./app/routes.js')(app);
 console.log('App listening on port 8888');
 
 //RESTful API
@@ -38,7 +44,7 @@ console.log('App listening on port 8888');
 
         // use mongoose to get all todos in the database
         Todo.find(function(err, todos) {
-
+    
             // if there is an error retrieving, send the error. nothing after res.send(err) will execute
             if (err)
                 res.send(err)

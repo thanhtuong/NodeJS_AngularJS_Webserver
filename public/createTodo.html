@@ -15,8 +15,17 @@
                     </div>
 
                     <!-- createToDo() WILL CREATE NEW TODOS -->
-                    <button type="submit" class="btn btn-primary btn-lg" ng-click="createOrUpdate()">{{addButon.text}}</button>
+                    <!-- <button type="submit" class="btn btn-primary btn-lg" ng-click="createOrUpdate()"> -->
+                        <a ui-sref="listTodo" class="btn btn-primary btn-lg" ng-click="createOrUpdate()">{{addButon.text}}</a>
+                    <!-- </button> -->
                 </form>
             </div>
         </div>
     <hr>
+
+    <div>
+        <a ui-sref=".list" class="btn btn-primary">List</a>
+        <a ui-sref=".paragraph" class="btn btn-primary">Paragraph</a>
+    </div>
+
+    <div ui-view></div>
