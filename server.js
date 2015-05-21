@@ -87,19 +87,21 @@ console.log('App listening on port 8888');
         });
     });
 
-    app.put('/api/todos/:_id',function(req,res){
+    // update todo
+    app.put('/api/todos/:_id', function(req,res){
         Todo.update({
             _id: req.params._id
         },{
             $set: {
-                text:req.body.text,
+                text : req.body.text,
                 assigned_by: req.body.assigned_by,
-                priority: req.body.priority
+                priority: req.body.priority,
+                done : false
             }
         },function(err, todo){
             if(err)
                 res.send(err);
-             Todo.find(function(err, todos) {
+            Todo.find(function(err, todos) {
                 if (err)
                     res.send(err)
                 res.json(todos);

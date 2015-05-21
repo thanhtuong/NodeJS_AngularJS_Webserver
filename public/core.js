@@ -6,40 +6,53 @@ todoApp.config(function($stateProvider,$urlRouterProvider){
 		.state('listTodo',{
 			url: '/listTodo',
 			templateUrl: 'listTodoDetail.html',
-			controller: 'mainController'
+			controller: 'listTodoController',
+			resolve:{
+				formData: function(TodoService){
+					return TodoService.formData;
+				},
+				addButonLabel: function(TodoService){
+					return TodoService.addButonLabel;
+				},
+				isEdit: function(TodoService){
+					return TodoService.isEdit;
+				}
+			}
 		})
 		.state('home',{
 			url:'/home',
 			templateUrl: 'createTodo.html',
-			controller: 'mainController'
+			controller: 'mainController',
+			resolve:{
+				formData: function(TodoService){
+					return TodoService.formData;
+				},
+				addButonLabel: function(TodoService){
+					return TodoService.addButonLabel;
+				},
+				isEdit: function(TodoService){
+					return TodoService.isEdit;
+				}
+			}
 		});
 });
-todoApp.factory('storeDataService',function(){
-	var formData = {
+todoApp.service('TodoService',function(){
+	this.formData = {
 		_id: '',
 		text: '',
 		assigned_by: '',
 		priority: ''
-	}
-	return formData;
+		};
+	this.addButonLabel ={
+			text: 'Add'
+		};
+	this.isEdit ={
+			value: false
+		};
 });
-todoApp.factory('changeButtonLabel',function(){
-	var addButon = {
-		text: 'Add'
-	}
-	return addButon;
-});
-todoApp.factory('isUpdateFlag',function(){
-	var isEdit = {
-		value: false
-	}
-	return isEdit;
-});
-todoApp.controller('mainController', function($scope, $http, storeDataService, changeButtonLabel,isUpdateFlag){
-	$scope.formData = storeDataService.formData;
-	$scope.addButon = changeButtonLabel.addButon;
-	$scope.isEdit = isUpdateFlag.isEdit;
 
+todoApp.controller('listTodoController',function($scope,$http,TodoService){
+	$scope.addButon = TodoService.addButonLabel;
 	$http.get('/api/todos')
 		.success(function(data){
 			$scope.todos = data;
@@ -48,20 +61,6 @@ todoApp.controller('mainController', function($scope, $http, storeDataService, c
 		.error(function(data){
 			console.log('Error: ' + data);
 		});
-
-	$scope.createTodo = function(){
-		$http.post('/api/todos',$scope.formData)
-			.success(function(data){
-				$scope.formData = {};
-				$scope.todos = data;
-				console.log(data);
-			})
-			.error(function(data){
-				console.log('Error: '+data);
-			});
-	};
-
-	// delete
 
 	$scope.deleteTodo = function(id){
 		var result = confirm("want to delete?");
@@ -76,26 +75,6 @@ todoApp.controller('mainController', function($scope, $http, storeDataService, c
 				});
 			};
 	};
-
-	$scope.updateTodo = function(id){
-		$http.put('/api/todos/'+id)
-			.success(function(data){
-				$scope.todos = data;
-				console.log(data);
-			})
-			.error(function(data){
-				console.log('Error: '+ data);
-			});
-	};
-
-	$scope.createOrUpdate = function(){
-		if($scope.isEdit.value){
-			$scope.updateTodo(storeDataService.formData._id);
-		}else {
-			$scope.createTodo();
-		}
-	};
-
 	$scope.edit = function(todo){
 		$scope.formData = {
 			_id: todo._id,
@@ -109,9 +88,53 @@ todoApp.controller('mainController', function($scope, $http, storeDataService, c
 		$scope.isEdit = {
 			value: true
 		};
-		isUpdateFlag.isEdit = $scope.isEdit;
-		storeDataService.formData = $scope.formData;
-		changeButtonLabel.addButon = $scope.addButon;
+		TodoService.isEdit = $scope.isEdit;
+		TodoService.formData = $scope.formData;
+		TodoService.addButonLabel = $scope.addButon;
 		console.log($scope.formData);
 	};
+});
+
+todoApp.controller('mainController', function($scope, $http, TodoService){
+	$scope.formData = TodoService.formData;
+	console.log(TodoService.formData);
+	$scope.addButon = TodoService.addButonLabel;
+	$scope.isEdit = TodoService.isEdit;
+
+	$scope.createTodo = function(){
+		$http.post('/api/todos',$scope.formData)
+			.success(function(data){
+				$scope.formData = {};
+				$scope.todos = data;
+				console.log(data);
+			})
+			.error(function(data){
+				console.log('Error: '+data);
+			});
+	};
+
+	// delete
+	
+	$scope.updateTodo = function(todoUpdate){
+		$http.put('/api/todos/'+ todoUpdate._id, todoUpdate)
+			.success(function(data){
+				$scope.todos = data;
+				console.log(data);
+			})
+			.error(function(data){
+				console.log('Error: '+ data);
+			});
+	};
+
+	$scope.createOrUpdate = function(){
+		if($scope.isEdit.value){
+			$scope.updateTodo($scope.formData);
+			console.log($scope.formData._id);
+			TodoService.formData={};
+		}else {
+			$scope.createTodo();
+		}
+	};
+
+	
 });
