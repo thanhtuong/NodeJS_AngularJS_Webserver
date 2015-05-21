@@ -1,7 +1,7 @@
 var todoApp = angular.module('todoApp',['ui.router']);
 
 todoApp.config(function($stateProvider,$urlRouterProvider){
-	$urlRouterProvider.otherwise('/home'); // any request mismatch will get into /home
+	$urlRouterProvider.otherwise('/home'); 
 	$stateProvider
 		.state('listTodo',{
 			url: '/listTodo',
@@ -114,7 +114,7 @@ todoApp.controller('mainController', function($scope, $http, TodoService){
 	};
 
 	// delete
-	
+
 	$scope.updateTodo = function(todoUpdate){
 		$http.put('/api/todos/'+ todoUpdate._id, todoUpdate)
 			.success(function(data){
