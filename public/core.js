@@ -125,14 +125,17 @@ todoApp.controller('mainController', function($scope, $http, TodoService){
 	$scope.isEdit = TodoService.isEdit;
 
 	$scope.createTodo = function(){
-		$http.post('/api/todos',$scope.formData)
-			.success(function(data){
-				$scope.todos = data;
-				console.log(data);
-			})
-			.error(function(data){
-				console.log('Error: '+data);
-			});
+		if($scope.formData.text!= undefined|| $scope.formData.assigned_by!= undefined || $scope.formData.priority!= undefined){
+			$http.post('/api/todos',$scope.formData)
+				.success(function(data){
+					TodoService.formData = {};
+					$scope.todos = data;
+					console.log(data);
+				})
+				.error(function(data){
+					console.log('Error: '+data);
+				});
+		};
 	};
 
 	// delete

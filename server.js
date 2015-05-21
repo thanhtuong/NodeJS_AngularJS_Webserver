@@ -67,6 +67,7 @@ console.log('App listening on port 8888');
                 res.send(err);
 
             // get and return all the todos after you create another
+
             Todo.find(function(err, todos) {
                 if (err)
                     res.send(err)
