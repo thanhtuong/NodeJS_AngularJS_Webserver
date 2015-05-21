@@ -6,34 +6,12 @@ todoApp.config(function($stateProvider,$urlRouterProvider){
 		.state('listTodo',{
 			url: '/listTodo',
 			templateUrl: 'listTodoDetail.html',
-			controller: 'listTodoController',
-			resolve:{
-				formData: function(TodoService){
-					return TodoService.formData;
-				},
-				addButonLabel: function(TodoService){
-					return TodoService.addButonLabel;
-				},
-				isEdit: function(TodoService){
-					return TodoService.isEdit;
-				}
-			}
+			controller: 'listTodoController'
 		})
 		.state('home',{
 			url:'/home',
 			templateUrl: 'createTodo.html',
-			controller: 'mainController',
-			resolve:{
-				formData: function(TodoService){
-					return TodoService.formData;
-				},
-				addButonLabel: function(TodoService){
-					return TodoService.addButonLabel;
-				},
-				isEdit: function(TodoService){
-					return TodoService.isEdit;
-				}
-			}
+			controller: 'mainController'
 		})
 		
 		// just for demo multiple views in one page
@@ -60,18 +38,23 @@ todoApp.config(function($stateProvider,$urlRouterProvider){
 		});
 });
 todoApp.service('TodoService',function(){
-	this.formData = {
+	var formData = {
 		_id: '',
 		text: '',
 		assigned_by: '',
 		priority: ''
 		};
-	this.addButonLabel ={
+	var addButonLabel =  {
 			text: 'Add'
 		};
-	this.isEdit ={
+	var isEdit = {
 			value: false
 		};
+	return {
+		formData: formData,
+		addButonLabel: addButonLabel,
+		isEdit: isEdit
+	};
 });
 
 todoApp.controller('listTodoController',function($scope,$http,TodoService){
@@ -99,21 +82,18 @@ todoApp.controller('listTodoController',function($scope,$http,TodoService){
 			};
 	};
 	$scope.edit = function(todo){
-		$scope.formData = {
+		TodoService.isEdit =  {
+			value: true
+		};
+		TodoService.formData = {
 			_id: todo._id,
 			text: todo.text,
 			assigned_by: todo.assigned_by,
 			priority: todo.priority
 		};
-		$scope.addButon ={
+		TodoService.addButonLabel = {
 			text: 'update'
 		};
-		$scope.isEdit = {
-			value: true
-		};
-		TodoService.isEdit = $scope.isEdit; 
-		TodoService.formData = $scope.formData;
-		TodoService.addButonLabel = $scope.addButon;
 		console.log($scope.formData);
 	};
 });
@@ -139,7 +119,6 @@ todoApp.controller('mainController', function($scope, $http, TodoService){
 	};
 
 	// delete
-
 	$scope.updateTodo = function(todoUpdate){
 		$http.put('/api/todos/'+ todoUpdate._id, todoUpdate)
 			.success(function(data){
