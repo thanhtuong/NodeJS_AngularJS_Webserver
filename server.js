@@ -29,6 +29,7 @@ var todoSchema =mongoose.Schema({
 
 // // model 
 var Todo = mongoose.model('Todo',todoSchema);
+
 // require('./app/models/todo.js');
 // require('./app/models/todo.js');
 // require('./app/routes.js')(app);
@@ -39,12 +40,11 @@ console.log('App listening on port 8888');
 
 //RESTful API
 // //route
-
  	app.get('/api/todos', function(req, res) {
 
         // use mongoose to get all todos in the database
         Todo.find(function(err, todos) {
-    
+
             // if there is an error retrieving, send the error. nothing after res.send(err) will execute
             if (err)
                 res.send(err)

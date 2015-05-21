@@ -36,7 +36,7 @@ todoApp.config(function($stateProvider,$urlRouterProvider){
 			}
 		})
 		
-		// just for demo multiple view in one page
+		// just for demo multiple views in one page
 		.state('about',{
 			url:'/about',
 			views:{
@@ -127,7 +127,6 @@ todoApp.controller('mainController', function($scope, $http, TodoService){
 	$scope.createTodo = function(){
 		$http.post('/api/todos',$scope.formData)
 			.success(function(data){
-				TodoService.formData = {};
 				$scope.todos = data;
 				console.log(data);
 			})
